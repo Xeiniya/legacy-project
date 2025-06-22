@@ -1,0 +1,197 @@
+<div class="container">
+    <div class="hero">
+        <h1>Добро пожаловать в Белавиа</h1>
+        <p>Национальная авиакомпания Республики Беларусь, обеспечивающая безопасные и комфортные перелеты по всему миру с 1996 года.</p>
+        <button id="learnMoreBtn" class="btn" data-page="details">Узнать больше</button>
+    </div>
+    
+    <div class="flights-section">
+        <h2>Информация о рейсах</h2>
+        <p>Узнайте актуальное расписание рейсов авиакомпании Белавиа.</p>
+        <button id="loadFlightsBtn" class="btn btn-secondary">Загрузить расписание рейсов</button>
+        
+        <div id="flightsTableContainer" class="hidden">
+            <div class="table-wrapper">
+                <table id="flightsTable" class="flights-table">
+                    <thead>
+                        <tr>
+                            <th>Рейс</th>
+                            <th>Откуда</th>
+                            <th>Куда</th>
+                            <th>Вылет</th>
+                            <th>Прилет</th>
+                            <th>Самолет</th>
+                            <th>Статус</th>
+                            <th>Цена (руб)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="loadingFlights" class="loading-flights hidden">
+            Загрузка данных о рейсах...
+        </div>
+        
+        <div id="flightsError" class="flights-error hidden">
+            Ошибка при загрузке данных о рейсах. Пожалуйста, попробуйте позже.
+        </div>
+    </div>
+    
+    <div class="features">
+        <div class="feature">
+            <div class="feature-icon">✈️</div>
+            <h3>Современный флот</h3>
+            <p>Наш авиапарк состоит из современных и безопасных самолетов Boeing и Embraer, обеспечивающих комфорт в полете.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">🌍</div>
+            <h3>Широкая география полетов</h3>
+            <p>Мы выполняем регулярные рейсы более чем в 40 аэропортов СНГ, Европы, Ближнего Востока и Азии.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">🛡️</div>
+            <h3>Безопасность прежде всего</h3>
+            <p>Высокие стандарты безопасности и профессиональная подготовка экипажа гарантируют вам спокойное путешествие.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+.hero {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.hero h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+.hero p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.feature {
+    flex: 1;
+    min-width: 300px;
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.feature-icon {
+    font-size: 40px;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+.feature h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.flights-section {
+    margin: 50px 0;
+    text-align: center;
+}
+
+.flights-section h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.flights-section p {
+    margin-bottom: 20px;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+}
+
+.btn-secondary:hover {
+    background-color: #004494;
+}
+
+.hidden {
+    display: none;
+}
+
+.loading-flights {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: var(--primary-color);
+}
+
+.flights-error {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: var(--accent-color);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.flights-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.flights-table th,
+.flights-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.flights-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+}
+
+.flights-table tr:last-child td {
+    border-bottom: none;
+}
+
+.flights-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.flights-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.flights-table .status-delayed {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+</style>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авиакомпания</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background: #f9f9f9;
+            white-space: pre-wrap; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Авиакомпания</h1>
+    <div>
+        <input onclick="handleAdd();" value="Ввод информации о рейсе" type="button">
+        <input onclick="handleDelete();" value="Удаление информации о рейсе" type="button">
+        <input onclick="handleGetInfo();" value="Получение информации о рейсе" type="button">
+        <input onclick="handleListAll();" value="Перечень всех рейсов" type="button">
+    </div>
+
+    <h2>Результаты:</h2>
+    <div id="output">Здесь будет выводиться информация.</div>
+
+    <script src="script.js"></script>
+</body>
+</html>

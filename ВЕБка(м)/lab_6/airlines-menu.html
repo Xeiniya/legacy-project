@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Меню авиационного сайта</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .menu {
+            display: flex;
+            background-color: #ffcc00;
+            padding: 10px;
+        }
+        .menu-item {
+            position: relative;
+            margin-right: 20px;
+            cursor: pointer;
+            padding: 5px 10px;
+            color: #333;
+        }
+        .menu-item:hover {
+            background-color: rgba(0,0,0,0.1);
+        }
+        .submenu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: none;
+            z-index: 1000;
+            min-width: 200px;
+        }
+        .submenu-item {
+            position: relative;
+            white-space: nowrap;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .submenu-item:hover {
+            background-color: #e0e0e0;
+        }
+        .submenu .submenu {
+            top: 0;
+            left: 100%;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu" id="mainMenu"></div>
+
+    <script>
+        const AviationMenu = [
+            {
+                name: 'История авиации',
+                submenu: [
+                    { name: 'Начало пути', url: '#start' },
+                    { name: 'Пионеры авиации', url: '#pioneers' },
+                    { 
+                        name: 'Эпохи развития', 
+                        submenu: [
+                            { name: 'Эра реактивной авиации', url: '#jet' },
+                            { name: 'Военная авиация', url: '#military' },
+                            { name: 'Космическая эра', url: '#space' }
+                        ]
+                    }
+                ]
+            },
+            {
+                name: 'Типы авиации',
+                submenu: [
+                    { name: 'Гражданская авиация', url: '#commercial' },
+                    { name: 'Военная авиация', url: '#military' },
+                    { 
+                        name: 'Специализированные виды', 
+                        submenu: [
+                            { name: 'Грузовая авиация', url: '#cargo' },
+                            { name: 'Санитарная авиация', url: '#medical' },
+                            { name: 'Сельскохозяйственная авиация', url: '#agricultural' }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        function ShowMenu(MenuItemsA, ParentElem, isRoot = true) {
+            if (!isRoot) {
+                const existingSubmenu = ParentElem.querySelector('.submenu');
+                if (existingSubmenu) {
+                    existingSubmenu.remove();
+                    return;
+                }
+            }
+
+            const menu = document.createElement('div');
+            menu.className = isRoot ? 'menu' : 'submenu';
+
+            MenuItemsA.forEach(item => {
+                const menuItem = document.createElement('div');
+                menuItem.className = isRoot ? 'menu-item' : 'submenu-item';
+                menuItem.textContent = item.name;
+
+                if (item.submenu) {
+                    menuItem.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        ShowMenu(item.submenu, menuItem, false);
+                    });
+                } else if (item.url) {
+                    menuItem.addEventListener('click', () => {
+                        window.location.href = item.url;
+                    });
+                }
+
+                menu.appendChild(menuItem);
+            });
+
+            if (!isRoot) {
+                menu.style.position = 'absolute';
+                menu.style.top = '100%';
+                menu.style.left = '0';
+                menu.style.display = 'block';
+                ParentElem.appendChild(menu);
+            } else {
+                ParentElem.appendChild(menu);
+            }
+        }
+
+        const mainMenu = document.getElementById('mainMenu');
+        ShowMenu(AviationMenu, mainMenu, true);
+
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.submenu').forEach(submenu => submenu.remove());
+        });
+    </script>
+</body>
+</html>

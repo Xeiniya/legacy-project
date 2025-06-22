@@ -1,0 +1,21 @@
+# Task Description
+
+## Problem Statement
+Create a program that implements a structure called ZNAK with the following fields:
+- Name - surname and first name
+- ZOD - zodiac sign
+- DATE - birth date (array of three numbers: year, month, day)
+
+The program should:
+- Input data from the keyboard into an array MASS consisting of 10 elements of type ZNAK
+- Records must be sorted by birth date
+- Display information about people born under a zodiac sign entered from the keyboard
+- If no such person exists, display a message
+
+## Implementation Details
+- The program is structured according to the KIS-2 model (Client-Interface-Server)
+- All files are organized according to the required project structure
+- The code follows the C language coding standards
+- Build automation is implemented with a Makefile
+
+

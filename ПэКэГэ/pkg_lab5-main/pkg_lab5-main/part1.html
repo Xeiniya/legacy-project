@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Алгоритм отсечения отрезков</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgb(254, 233, 253);
+        }
+        canvas {
+            border: 1px solid black;
+        }
+        #controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            background-color: rgb(253, 223, 251);
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+        }
+        #segments, #window {
+            width: 100%;
+            font-size: 16px;
+            padding: 5px;
+        }
+        button {
+            font-size: 16px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <h3>Ввод данных</h3>
+        <label for="segments">Отрезки (x1 y1 x2 y2):</label><br>
+        <textarea id="segments" rows="5" cols="30"></textarea><br><br>
+        <label for="window">Окно (Xmin Ymin Xmax Ymax):</label><br>
+        <input type="text" id="window" value="-50 -50 50 50"><br><br>
+        <button onclick="draw()">Отобразить</button>
+    </div>
+
+    <canvas id="canvas" width="600" height="600"></canvas>
+
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        const scale = 5; 
+        const originX = canvas.width / 2; 
+        const originY = canvas.height / 2; 
+        const gridSpacing = scale * 10; 
+
+        function drawGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = "#ddd";
+            ctx.lineWidth = 0.5;
+            for (let x = 0; x < canvas.width; x += gridSpacing) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSpacing) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, originY);
+            ctx.lineTo(canvas.width, originY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(originX, 0);
+            ctx.lineTo(originX, canvas.height);
+            ctx.stroke();
+
+            // Подписи осей
+            ctx.font = "18px Arial";
+            ctx.fillStyle = "black";
+            ctx.fillText("X", canvas.width - 20, originY - 10);
+            ctx.fillText("Y", originX + 10, 20);
+        }
+
+        function toCanvasX(x) {
+            return originX + x * scale;
+        }
+
+        function toCanvasY(y) {
+            return originY - y * scale;
+        }
+
+        function drawRectangle(xmin, ymin, xmax, ymax) {
+            ctx.strokeStyle = "#00f";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(toCanvasX(xmin), toCanvasY(ymax), (xmax - xmin) * scale, (ymax - ymin) * scale);
+        }
+
+        function drawSegment(x1, y1, x2, y2, color) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(toCanvasX(x1), toCanvasY(y1));
+            ctx.lineTo(toCanvasX(x2), toCanvasY(y2));
+            ctx.stroke();
+        }
+
+        function midpointClip(x1, y1, x2, y2, xmin, ymin, xmax, ymax) {
+            const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+
+            if (distance < 1 / scale) {
+                return;
+            }
+
+            const isOutside = (x, y) => x < xmin || x > xmax || y < ymin || y > ymax;
+            const isInside = (x, y) => x >= xmin && x <= xmax && y >= ymin && y <= ymax;
+
+            if (isOutside(x1, y1) && isOutside(x2, y2)) {
+                return;
+            }
+
+            if (isInside(x1, y1) && isInside(x2, y2)) {
+                drawSegment(x1, y1, x2, y2, 'green');
+                return;
+            }
+
+            const xm = (x1 + x2) / 2;
+            const ym = (y1 + y2) / 2;
+
+            midpointClip(x1, y1, xm, ym, xmin, ymin, xmax, ymax);
+            midpointClip(xm, ym, x2, y2, xmin, ymin, xmax, ymax);
+        }
+
+        function draw() {
+            drawGrid();
+
+            const windowInput = document.getElementById("window").value.split(" ").map(Number);
+            const [xmin, ymin, xmax, ymax] = windowInput;
+
+            drawRectangle(xmin, ymin, xmax, ymax);
+
+            const segmentsInput = document.getElementById("segments").value.trim().split("\n");
+            segmentsInput.forEach(segment => {
+                const [x1, y1, x2, y2] = segment.split(" ").map(Number);
+                drawSegment(x1, y1, x2, y2, 'red'); 
+                midpointClip(x1, y1, x2, y2, xmin, ymin, xmax, ymax);
+            });
+        }
+
+        draw();
+    </script>
+
+</body>
+</html>

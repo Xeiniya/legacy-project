@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Алгоритмы растеризации</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #e1f7d5;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #3a7f3e;
+        }
+
+        .input, .algorithm-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .input input {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid #66cc66;
+            margin-right: 10px;
+            text-align: center;
+            background-color: #f3fff6;
+        }
+
+        .input input[type="range"] {
+            width: 80%;
+            margin: 10px 0;
+        }
+
+        .algorithm-buttons button {
+            padding: 8px 15px;
+            background: #3a7f3e;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            margin: 5px;
+            border-radius: 5px;
+        }
+
+        .algorithm-buttons button:hover {
+            background-color: #2a5c2a;
+        }
+
+        canvas {
+            border: 1px solid #66cc66;
+            background: #fff;
+            cursor: crosshair;
+            margin-top: 20px;
+        }
+
+        .results {
+            font-size: 12px;
+            color: #3a7f3e;
+            width: 80%;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .results pre {
+            padding: 8px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Алгоритмы растеризации</h2>
+    <div class="input">
+        <input type="number" id="x1" placeholder="x1">
+        <input type="number" id="y1" placeholder="y1">
+        <input type="number" id="x2" placeholder="x2">
+        <input type="number" id="y2" placeholder="y2">
+        <input type="number" id="radius" placeholder="radius">
+    </div>
+    <div class="algorithm-buttons">
+        <button onclick="drawStepByStep()">Пошаговый</button>
+        <button onclick="drawDDA()">ЦДА</button>
+        <button onclick="drawBresenham()">Брезенхем (линия)</button>
+        <button onclick="drawBresenhamCircle()">Брезенхем (окружность)</button>
+        <button onclick="drawCastlePitteway()">Кастла-Питвея</button>
+    </div>
+    <div class="input">
+        <input type="range" id="scale" min="5" max="50" value="10" step="0.1" onchange="updateScale()">
+        <span id="scaleValue">Масштаб: 15.0</span>
+    </div>
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <div class="results">
+        <b>Время выполнения:</b>
+        <pre id="timing"></pre>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

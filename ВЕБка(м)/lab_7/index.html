@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Белавиа - Национальная авиакомпания Беларуси</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #0056b3;
+            --accent-color: #dc3545;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #c82333;
+        }
+        
+        .page {
+            display: none;
+            padding: 40px 0;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .hero {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .hero h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .feature {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .feature h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .destinations {
+            margin: 40px 0;
+        }
+        
+        .destinations h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-align: center;
+        }
+        
+        .destination-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .destination-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .destination-image {
+            height: 180px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-weight: bold;
+        }
+        
+        .destination-info {
+            padding: 20px;
+        }
+        
+        .destination-info h3 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .fleet {
+            margin: 40px 0;
+        }
+        
+        .fleet h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-align: center;
+        }
+        
+        .fleet-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .aircraft {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .aircraft-image {
+            width: 200px;
+            height: 120px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+        
+        .aircraft-details {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .aircraft h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .stat {
+            background-color: var(--light-color);
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <div class="logo-icon">B</div>
+                <div class="logo-title">Белавиа</div>
+            </div>
+            <button id="navigationBtn" class="btn">Подробнее о авиакомпании</button>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="homePage" class="page active">
+            <div class="container">
+                <div class="hero">
+                    <h1>Добро пожаловать в Белавиа</h1>
+                    <p>Национальная авиакомпания Республики Беларусь, обеспечивающая безопасные и комфортные перелеты по всему миру с 1996 года.</p>
+                    <button id="learnMoreBtn" class="btn">Узнать больше</button>
+                </div>
+                
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">✈️</div>
+                        <h3>Современный флот</h3>
+                        <p>Наш авиапарк состоит из современных и безопасных самолетов Boeing и Embraer, обеспечивающих комфорт в полете.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🌍</div>
+                        <h3>Широкая география полетов</h3>
+                        <p>Мы выполняем регулярные рейсы более чем в 40 аэропортов СНГ, Европы, Ближнего Востока и Азии.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🛡️</div>
+                        <h3>Безопасность прежде всего</h3>
+                        <p>Высокие стандарты безопасности и профессиональная подготовка экипажа гарантируют вам спокойное путешествие.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="detailsPage" class="page">
+            <div class="container">
+                <h1>Белавиа - Национальная авиакомпания Беларуси</h1>
+                
+                <div class="destinations">
+                    <h2>Популярные направления</h2>
+                    <p>Белавиа соединяет Беларусь с ключевыми городами и странами, обеспечивая удобные и доступные перелеты для пассажиров.</p>
+                    
+                    <div class="destination-grid">
+                        <div class="destination-card">
+                            <div class="destination-image">Москва</div>
+                            <div class="destination-info">
+                                <h3>Москва, Россия</h3>
+                                <p>Ежедневные рейсы в столицу России с удобными стыковками.</p>
+                            </div>
+                        </div>
+                        <div class="destination-card">
+                            <div class="destination-image">Санкт-Петербург</div>
+                            <div class="destination-info">
+                                <h3>Санкт-Петербург, Россия</h3>
+                                <p>Регулярные рейсы в культурную столицу России.</p>
+                            </div>
+                        </div>
+                        <div class="destination-card">
+                            <div class="destination-image">Стамбул</div>
+                            <div class="destination-info">
+                                <h3>Стамбул, Турция</h3>
+                                <p>Популярное туристическое и бизнес направление.</p>
+                            </div>
+                        </div>
+                        <div class="destination-card">
+                            <div class="destination-image">Дубай</div>
+                            <div class="destination-info">
+                                <h3>Дубай, ОАЭ</h3>
+                                <p>Рейсы в один из самых современных городов мира.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fleet">
+                    <h2>Авиапарк</h2>
+                    <p>Белавиа эксплуатирует современный и разнообразный флот самолетов, который постоянно обновляется для обеспечения высокого уровня комфорта и безопасности.</p>
+                    
+                    <div class="fleet-list">
+                        <div class="aircraft">
+                            <div class="aircraft-image">Boeing 737-800</div>
+                            <div class="aircraft-details">
+                                <h3>Boeing 737-800</h3>
+                                <p>Среднемагистральный пассажирский самолет, составляющий основу флота Белавиа.</p>
+                                <div class="stats">
+                                    <div class="stat">Вместимость: 189 пассажиров</div>
+                                    <div class="stat">Дальность: 5,765 км</div>
+                                    <div class="stat">Количество: 9 самолетов</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aircraft">
+                            <div class="aircraft-image">Embraer 195</div>
+                            <div class="aircraft-details">
+                                <h3>Embraer 195</h3>
+                                <p>Современный региональный самолет, используемый для обслуживания маршрутов средней протяженности.</p>
+                                <div class="stats">
+                                    <div class="stat">Вместимость: 107 пассажиров</div>
+                                    <div class="stat">Дальность: 3,900 км</div>
+                                    <div class="stat">Количество: 7 самолетов</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aircraft">
+                            <div class="aircraft-image">Boeing 737-300</div>
+                            <div class="aircraft-details">
+                                <h3>Boeing 737-300</h3>
+                                <p>Надежный среднемагистральный самолет, используемый для полетов по популярным направлениям.</p>
+                                <div class="stats">
+                                    <div class="stat">Вместимость: 148 пассажиров</div>
+                                    <div class="stat">Дальность: 4,200 км</div>
+                                    <div class="stat">Количество: 3 самолета</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="history">
+                    <h2>История авиакомпании</h2>
+                    <p>Белавиа была основана 5 марта 1996 года на базе Белорусского объединения гражданской авиации. За годы своего существования авиакомпания превратилась в современного авиаперевозчика, соответствующего международным стандартам.</p>
+                    <p>Ключевые этапы развития:</p>
+                    <ul>
+                        <li>1996 г. - Основание авиакомпании</li>
+                        <li>1997 г. - Начало регулярных международных рейсов</li>
+                        <li>2004 г. - Вступление в IATA (Международную ассоциацию воздушного транспорта)</li>
+                        <li>2008 г. - Начало обновления флота современными самолетами</li>
+                        <li>2014 г. - Открытие новых маршрутов в Европу и Азию</li>
+                        <li>2016 г. - Ребрендинг и обновление фирменного стиля</li>
+                        <li>2020 г. - Адаптация к новым реалиям в условиях мировой пандемии</li>
+                    </ul>
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px;">
+                    <button id="backBtn" class="btn">Вернуться на главную</button>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>О компании</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">История</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Информация</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Расписание рейсов</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Контакты</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Обратная связь</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Белавиа - Национальная авиакомпания Беларуси. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        const navigationBtn = document.getElementById('navigationBtn');
+        const learnMoreBtn = document.getElementById('learnMoreBtn');
+        const backBtn = document.getElementById('backBtn');
+        
+        const homePage = document.getElementById('homePage');
+        const detailsPage = document.getElementById('detailsPage');
+        
+        function switchPage(fromPage, toPage) {
+            fromPage.classList.remove('active');
+            toPage.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+        
+        navigationBtn.addEventListener('click', () => {
+            switchPage(homePage, detailsPage);
+        });
+        
+        learnMoreBtn.addEventListener('click', () => {
+            switchPage(homePage, detailsPage);
+        });
+        
+        backBtn.addEventListener('click', () => {
+            switchPage(detailsPage, homePage);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Алгоритм Кируса-Бека</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgb(254, 233, 253);
+        }
+        canvas {
+            border: 1px solid black;
+        }
+        #controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            background-color: rgb(253, 223, 251);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(199, 79, 79, 0.1);
+        }
+        #controls input, #controls textarea {
+            font-size: 16px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <h3>Ввод данных</h3>
+        <label for="polygon">Многоугольник (x y - по одной паре на строку):</label><br>
+        <textarea id="polygon" rows="5" cols="20"></textarea><br>
+        <label for="segments">Отрезки (x1 y1 x2 y2 - по одному на строку):</label><br>
+        <textarea id="segments" rows="5" cols="30"></textarea><br><br>
+        <button onclick="draw()">Отобразить</button>
+    </div>
+
+    <canvas id="canvas" width="600" height="600"></canvas>
+
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        const scale = 5;
+        const originX = canvas.width / 2;
+        const originY = canvas.height / 2;
+        const gridSpacing = scale * 10; 
+
+        function drawGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = "#ddd";
+            ctx.lineWidth = 0.5;
+            for (let x = 0; x < canvas.width; x += gridSpacing) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSpacing) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, originY);
+            ctx.lineTo(canvas.width, originY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(originX, 0);
+            ctx.lineTo(originX, canvas.height);
+            ctx.stroke();
+
+            // Подписи осей
+            ctx.font = "18px Arial";
+            ctx.fillStyle = "black";
+            ctx.fillText("X", canvas.width - 20, originY - 10);
+            ctx.fillText("Y", originX + 10, 20);
+        }
+
+        function toCanvasX(x) {
+            return originX + x * scale;
+        }
+
+        function toCanvasY(y) {
+            return originY - y * scale;
+        }
+
+        function drawPolygon(points) {
+            ctx.strokeStyle = "blue";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(toCanvasX(points[0][0]), toCanvasY(points[0][1]));
+            points.forEach(([x, y]) => ctx.lineTo(toCanvasX(x), toCanvasY(y)));
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+        function drawSegment(x1, y1, x2, y2, color) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(toCanvasX(x1), toCanvasY(y1));
+            ctx.lineTo(toCanvasX(x2), toCanvasY(y2));
+            ctx.stroke();
+        }
+
+        function getNormal(p1, p2) {
+            const dx = p2[0] - p1[0];
+            const dy = p2[1] - p1[1];
+            return [-dy, dx];
+        }
+
+        function dotProduct(v1, v2) {
+            return v1[0] * v2[0] + v1[1] * v2[1];
+        }
+
+        function cyrusBeckClip(segment, polygon) {
+            let [x1, y1, x2, y2] = segment;
+            let tE = 0;
+            let tL = 1;
+
+            const d = [x2 - x1, y2 - y1];
+            for (let i = 0; i < polygon.length; i++) {
+                const p1 = polygon[i];
+                const p2 = polygon[(i + 1) % polygon.length];
+                const edge = [p2[0] - p1[0], p2[1] - p1[1]];
+                const normal = getNormal(p1, p2);
+                const w = [x1 - p1[0], y1 - p1[1]];
+
+                const dDotN = dotProduct(d, normal);
+                const wDotN = dotProduct(w, normal);
+
+                if (dDotN !== 0) {
+                    const t = -wDotN / dDotN;
+                    if (dDotN > 0) {
+                        tE = Math.max(tE, t);
+                    } else {
+                        tL = Math.min(tL, t);
+                    }
+                } else if (wDotN < 0) {
+                    return null;
+                }
+            }
+
+            if (tE > tL) {
+                return null;
+            }
+
+            const clippedX1 = x1 + tE * d[0];
+            const clippedY1 = y1 + tE * d[1];
+            const clippedX2 = x1 + tL * d[0];
+            const clippedY2 = y1 + tL * d[1];
+            return [clippedX1, clippedY1, clippedX2, clippedY2];
+        }
+
+        function draw() {
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGrid();
+
+            const polygonInput = document.getElementById("polygon").value.trim().split("\n").map(line => line.split(" ").map(Number));
+            drawPolygon(polygonInput);
+
+            const segmentsInput = document.getElementById("segments").value.trim().split("\n").map(line => line.split(" ").map(Number));
+
+            segmentsInput.forEach(([x1, y1, x2, y2]) => {
+                const clipped = cyrusBeckClip([x1, y1, x2, y2], polygonInput);
+                if (clipped) {
+                    const [cx1, cy1, cx2, cy2] = clipped;
+                    drawSegment(x1, y1, cx1, cy1, 'red');
+                    drawSegment(cx1, cy1, cx2, cy2, 'green');
+                    drawSegment(cx2, cy2, x2, y2, 'red');
+                } else {
+                    drawSegment(x1, y1, x2, y2, 'red');
+                }
+            });
+        }
+
+        draw();
+    </script>
+
+</body>
+</html>
+
+

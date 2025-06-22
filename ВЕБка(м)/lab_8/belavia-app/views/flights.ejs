@@ -1,0 +1,57 @@
+<%- include('partials/header') %>
+
+<div class="page-header">
+    <h2>Рейсы Белавиа</h2>
+    <a href="/flights/new" class="btn btn-primary">Добавить новый рейс</a>
+</div>
+
+<div class="flights-container">
+    <% if (flights && flights.length > 0) { %>
+        <table class="flights-table">
+            <thead>
+                <tr>
+                    <th>Номер рейса</th>
+                    <th>Откуда</th>
+                    <th>Куда</th>
+                    <th>Время вылета</th>
+                    <th>Время прилета</th>
+                    <th>Самолет</th>
+                    <th>Статус</th>
+                    <th>Цена</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% flights.forEach(flight => { %>
+                    <tr>
+                        <td><%= flight.id %></td>
+                        <td><%= flight.departure %></td>
+                        <td><%= flight.destination %></td>
+                        <td><%= flight.departureTime %></td>
+                        <td><%= flight.arrivalTime %></td>
+                        <td><%= flight.aircraft %></td>
+                        <td class="<%= flight.status.toLowerCase().includes('задерж') ? 'status-delayed' : '' %>">
+                            <%= flight.status %>
+                        </td>
+                        <td><%= flight.price.toLocaleString() %> руб</td>
+                        <td class="actions">
+                            <a href="/flights/edit/<%= flight.id %>" class="btn btn-small btn-edit">Изменить</a>
+                            <form action="/api/flights/<%= flight.id %>/delete" method="POST">
+                                <button type="submit" class="btn btn-small btn-delete" 
+                                        onclick="return confirm('Вы уверены, что хотите удалить этот рейс?')">
+                                    Удалить
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <div class="empty-state">
+            <p>Рейсы не найдены. Добавьте новый рейс.</p>
+        </div>
+    <% } %>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,28 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+      - Development
+  pull_request:
+    branches:
+      - main
+      - Development
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up build environment
+        run: sudo apt-get update && sudo apt-get install -y build-essential
+
+      - name: Build project
+        run: make
+
+      - name: Run tests
+        run: ./bin/car_owners

@@ -1,0 +1,230 @@
+<div class="container">
+    <h1>Белавиа - Национальная авиакомпания Беларуси</h1>
+    
+    <div class="destinations">
+        <h2>Популярные направления</h2>
+        <p>Белавиа соединяет Беларусь с ключевыми городами и странами, обеспечивая удобные и доступные перелеты для пассажиров.</p>
+        
+        <div class="destination-grid">
+            <div class="destination-card">
+                <div class="destination-image">Москва</div>
+                <div class="destination-info">
+                    <h3>Москва, Россия</h3>
+                    <p>Ежедневные рейсы в столицу России с удобными стыковками.</p>
+                </div>
+            </div>
+            <div class="destination-card">
+                <div class="destination-image">Санкт-Петербург</div>
+                <div class="destination-info">
+                    <h3>Санкт-Петербург, Россия</h3>
+                    <p>Регулярные рейсы в культурную столицу России.</p>
+                </div>
+            </div>
+            <div class="destination-card">
+                <div class="destination-image">Стамбул</div>
+                <div class="destination-info">
+                    <h3>Стамбул, Турция</h3>
+                    <p>Популярное туристическое и бизнес направление.</p>
+                </div>
+            </div>
+            <div class="destination-card">
+                <div class="destination-image">Дубай</div>
+                <div class="destination-info">
+                    <h3>Дубай, ОАЭ</h3>
+                    <p>Рейсы в один из самых современных городов мира.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="fleet">
+        <h2>Авиапарк</h2>
+        <p>Белавиа эксплуатирует современный и разнообразный флот самолетов, который постоянно обновляется для обеспечения высокого уровня комфорта и безопасности.</p>
+        
+        <div class="fleet-list">
+            <div class="aircraft">
+                <div class="aircraft-image">Boeing 737-800</div>
+                <div class="aircraft-details">
+                    <h3>Boeing 737-800</h3>
+                    <p>Среднемагистральный пассажирский самолет, составляющий основу флота Белавиа.</p>
+                    <div class="stats">
+                        <div class="stat">Вместимость: 189 пассажиров</div>
+                        <div class="stat">Дальность: 5,765 км</div>
+                        <div class="stat">Количество: 9 самолетов</div>
+                    </div>
+                </div>
+            </div>
+            <div class="aircraft">
+                <div class="aircraft-image">Embraer 195</div>
+                <div class="aircraft-details">
+                    <h3>Embraer 195</h3>
+                    <p>Современный региональный самолет, используемый для обслуживания маршрутов средней протяженности.</p>
+                    <div class="stats">
+                        <div class="stat">Вместимость: 107 пассажиров</div>
+                        <div class="stat">Дальность: 3,900 км</div>
+                        <div class="stat">Количество: 7 самолетов</div>
+                    </div>
+                </div>
+            </div>
+            <div class="aircraft">
+                <div class="aircraft-image">Boeing 737-300</div>
+                <div class="aircraft-details">
+                    <h3>Boeing 737-300</h3>
+                    <p>Надежный среднемагистральный самолет, используемый для полетов по популярным направлениям.</p>
+                    <div class="stats">
+                        <div class="stat">Вместимость: 148 пассажиров</div>
+                        <div class="stat">Дальность: 4,200 км</div>
+                        <div class="stat">Количество: 3 самолета</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="history">
+        <h2>История авиакомпании</h2>
+        <p>Белавиа была основана 5 марта 1996 года на базе Белорусского объединения гражданской авиации. За годы своего существования авиакомпания превратилась в современного авиаперевозчика, соответствующего международным стандартам.</p>
+        <p>Ключевые этапы развития:</p>
+        <ul>
+            <li>1996 г. - Основание авиакомпании</li>
+            <li>1997 г. - Начало регулярных международных рейсов</li>
+            <li>2004 г. - Вступление в IATA (Международную ассоциацию воздушного транспорта)</li>
+            <li>2008 г. - Начало обновления флота современными самолетами</li>
+            <li>2014 г. - Открытие новых маршрутов в Европу и Азию</li>
+            <li>2016 г. - Ребрендинг и обновление фирменного стиля</li>
+            <li>2020 г. - Адаптация к новым реалиям в условиях мировой пандемии</li>
+        </ul>
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px;">
+        <button id="backBtn" class="btn" data-page="home">Вернуться на главную</button>
+    </div>
+</div>
+
+<style>
+.destinations {
+    margin: 40px 0;
+}
+
+.destinations h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+.destination-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.destination-card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.destination-image {
+    height: 180px;
+    background-color: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-weight: bold;
+}
+
+.destination-info {
+    padding: 20px;
+}
+
+.destination-info h3 {
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.fleet {
+    margin: 40px 0;
+}
+
+.fleet h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+.fleet-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.aircraft {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.aircraft-image {
+    width: 200px;
+    height: 120px;
+    background-color: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.aircraft-details {
+    flex: 1;
+    min-width: 300px;
+}
+
+.aircraft h3 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.stat {
+    background-color: var(--light-color);
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.history {
+    margin-top: 40px;
+}
+
+.history h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+.history ul {
+    margin-top: 15px;
+    margin-left: 20px;
+}
+
+.history li {
+    margin-bottom: 10px;
+}
+</style>

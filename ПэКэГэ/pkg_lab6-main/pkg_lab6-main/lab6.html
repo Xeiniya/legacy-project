@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D БУКВА "H" С ОРТОГРАФИЧЕСКИМИ ПРОЕКЦИЯМИ</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      background-color: #333;
+    }
+    canvas {
+      border: 1px solid #ccc;
+    }
+    #mainCanvas {
+      flex: 1 1 100%;
+    }
+    .projectionCanvas {
+      flex: 1 1 calc(33.3% - 20px);
+    }
+    .controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 10;
+      padding: 10px;
+      color: white;
+    }
+    .control {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .control label {
+      margin-right: 10px;
+      white-space: nowrap;
+    }
+    .control input {
+      flex: 1;
+    }
+    pre {
+      color: white;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <div class="control">
+      <label for="rotate-x">Вращение по оси X:</label>
+      <input type="range" id="rotate-x" min="0" max="360" step="1" value="0">
+    </div>
+    <div class="control">
+      <label for="rotate-y">Вращение по оси Y:</label>
+      <input type="range" id="rotate-y" min="0" max="360" step="1" value="0">
+    </div>
+    <div class="control">
+      <label for="scale-x">Масштабирование по оси X:</label>
+      <input type="range" id="scale-x" min="0.1" max="3" step="0.1" value="1">
+    </div>
+    <div class="control">
+      <label for="scale-y">Масштабирование по оси Y:</label>
+      <input type="range" id="scale-y" min="0.1" max="3" step="0.1" value="1">
+    </div>
+    <div class="control">
+      <label for="scale-z">Масштабирование по оси Z:</label>
+      <input type="range" id="scale-z" min="0.1" max="3" step="0.1" value="1">
+    </div>
+    <div class="control">
+      <label for="translate-x">Перемещение по оси X:</label>
+      <input type="range" id="translate-x" min="-5" max="5" step="0.1" value="0">
+    </div>
+    <div class="control">
+      <label for="translate-y">Перемещение по оси Y:</label>
+      <input type="range" id="translate-y" min="-5" max="5" step="0.1" value="0">
+    </div>
+    <div class="control">
+      <label for="translate-z">Перемещение по оси Z:</label>
+      <input type="range" id="translate-z" min="-5" max="5" step="0.1" value="0">
+    </div>
+    <pre id="matrix-output"></pre>
+    <p>Матрица преобразования текущего состояния объекта</p>
+  </div>
+
+  <!-- Основной 3D-рендер -->
+  <canvas id="mainCanvas"></canvas>
+  <!-- Ортографические проекции -->
+  <div style="display: flex; width: 100%; gap: 10px;">
+    <canvas class="projectionCanvas" id="projOxy"></canvas>
+    <canvas class="projectionCanvas" id="projOxz"></canvas>
+    <canvas class="projectionCanvas" id="projOyz"></canvas>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r127/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/OrbitControls.js"></script>
+  <script>
+    const mainCanvas = document.getElementById('mainCanvas');
+    const renderer = new THREE.WebGLRenderer({ canvas: mainCanvas });
+    renderer.setSize(window.innerWidth, window.innerHeight / 2);
+    renderer.setClearColor(0x000000); 
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / (window.innerHeight / 2), 0.1, 1000);
+    camera.position.set(3, 3, 5);
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+    function createThickAxes(size = 5) {
+      const axesGroup = new THREE.Group();
+
+      const createAxis = (color, start, end, thickness = 0.05) => {
+        const material = new THREE.MeshBasicMaterial({ color });
+        const geometry = new THREE.CylinderGeometry(thickness, thickness, size, 32);
+        const axis = new THREE.Mesh(geometry, material);
+        axis.position.copy(start.clone().add(end).multiplyScalar(0.5));
+        axis.lookAt(end);
+        axis.rotateX(Math.PI / 2);
+        return axis;
+      };
+
+      axesGroup.add(createAxis(0xff0000, new THREE.Vector3(0, 0, 0), new THREE.Vector3(size, 0, 0))); // X ось
+      axesGroup.add(createAxis(0x00ff00, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, size, 0))); // Y ось
+      axesGroup.add(createAxis(0x0000ff, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, size))); // Z ось
+
+      return axesGroup;
+    }
+
+    scene.add(createThickAxes(5));
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+    const pointLight = new THREE.PointLight(0xffffff, 1);
+    pointLight.position.set(10, 10, 10);
+    scene.add(pointLight);
+
+    let textMesh;
+
+    const fontLoader = new THREE.FontLoader();
+    fontLoader.load('https://cdn.jsdelivr.net/npm/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+      const textGeometry = new THREE.TextGeometry('H', {
+        font: font,
+        size: 2,
+        height: 0.3,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 0.03,
+        bevelSize: 0.03,
+        bevelSegments: 5,
+      });
+
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: false });
+      textMesh = new THREE.Mesh(textGeometry, material);
+
+      scene.add(textMesh);
+    });
+
+    const transformParams = {
+      rotateX: 0,
+      rotateY: 0,
+      scaleX: 1,
+      scaleY: 1,
+      scaleZ: 1,
+      translateX: 0,
+      translateY: 0,
+      translateZ: 0,
+    };
+
+    function updateTransform() {
+      if (!textMesh) return;
+
+      textMesh.rotation.set(transformParams.rotateX, transformParams.rotateY, 0);
+      textMesh.scale.set(transformParams.scaleX, transformParams.scaleY, transformParams.scaleZ);
+      textMesh.position.set(transformParams.translateX, transformParams.translateY, transformParams.translateZ);
+
+      const matrix = textMesh.matrixWorld;
+      const matrixArray = matrix.toArray();
+      let matrixText = '';
+      for (let i = 0; i < 4; i++) {
+        matrixText += matrixArray.slice(i * 4, (i + 1) * 4).map(val => val.toFixed(1)).join(' ') + '\n';
+      }
+      document.getElementById('matrix-output').textContent = matrixText;
+    }
+
+    document.getElementById('rotate-x').addEventListener('input', (e) => {
+      transformParams.rotateX = THREE.MathUtils.degToRad(e.target.value);
+      updateTransform();
+    });
+    document.getElementById('rotate-y').addEventListener('input', (e) => {
+      transformParams.rotateY = THREE.MathUtils.degToRad(e.target.value);
+      updateTransform();
+    });
+    document.getElementById('scale-x').addEventListener('input', (e) => {
+      transformParams.scaleX = parseFloat(e.target.value);
+      updateTransform();
+    });
+    document.getElementById('scale-y').addEventListener('input', (e) => {
+      transformParams.scaleY = parseFloat(e.target.value);
+      updateTransform();
+    });
+    document.getElementById('scale-z').addEventListener('input', (e) => {
+      transformParams.scaleZ = parseFloat(e.target.value);
+      updateTransform();
+    });
+    document.getElementById('translate-x').addEventListener('input', (e) => {
+      transformParams.translateX = parseFloat(e.target.value);
+      updateTransform();
+    });
+    document.getElementById('translate-y').addEventListener('input', (e) => {
+      transformParams.translateY = parseFloat(e.target.value);
+      updateTransform();
+    });
+    document.getElementById('translate-z').addEventListener('input', (e) => {
+      transformParams.translateZ = parseFloat(e.target.value);
+      updateTransform();
+    });
+
+    const projectionScenes = [
+      { canvas: document.getElementById('projOxy'), camera: new THREE.OrthographicCamera(-5, 5, 5, -5, 0.1, 100) },
+      { canvas: document.getElementById('projOxz'), camera: new THREE.OrthographicCamera(-5, 5, 5, -5, 0.1, 100) },
+      { canvas: document.getElementById('projOyz'), camera: new THREE.OrthographicCamera(-5, 5, 5, -5, 0.1, 100) },
+    ];
+
+    projectionScenes[0].camera.position.set(0, 0, 10); // Oxy
+    projectionScenes[1].camera.position.set(0, 10, 0); // Oxz
+    projectionScenes[2].camera.position.set(10, 0, 0); // Oyz
+
+    projectionScenes.forEach(proj => proj.camera.lookAt(0, 0, 0));
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      renderer.render(scene, camera);
+
+      projectionScenes.forEach(proj => {
+        const projRenderer = new THREE.WebGLRenderer({ canvas: proj.canvas });
+        projRenderer.setSize(proj.canvas.clientWidth, proj.canvas.clientHeight);
+        projRenderer.setClearColor(0x000000); // Черный фон для проекций
+        projRenderer.render(scene, proj.camera);
+      });
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / (window.innerHeight / 2);
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight / 2);
+    });
+  </script>
+</body>
+</html>

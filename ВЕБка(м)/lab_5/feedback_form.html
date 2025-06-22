@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Форма обратной связи - История авиации</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .wrapper {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            background-color: #ffcc00;
+            padding: 15px;
+            width: 100%;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+        }
+
+        .menu {
+            width: 200px;
+            background-color: #f4f4f4;
+            padding: 10px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #ddd;
+            width: 100%;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-row {
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .form-label {
+            width: 200px;
+            padding-right: 15px;
+            margin-top: 5px;
+        }
+
+        .form-field {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.85em;
+            margin-top: 3px;
+            margin-left: 200px;
+            width: 100%;
+        }
+
+        input[type="text"], 
+        input[type="email"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        input[type="button"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="button"]:hover {
+            background-color: #45a049;
+        }
+
+        .form-title {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header class="header">
+            Обратная связь - История авиации
+        </header>
+        
+        <div class="main-container">
+            <nav class="menu">
+                <ul>
+                    <li><a href="index.html#start">Начало пути</a></li>
+                    <li><a href="index.html#jet">Эра реактивной авиации</a></li>
+                    <li><a href="index.html#future">Будущее авиации</a></li>
+                    <li><a href="index.html#pioneers">Пионеры авиации</a></li>
+                    <li><a href="index.html#military">Военная авиация</a></li>
+                    <li><a href="index.html#modern">Современные технологии</a></li>
+                    <li><a href="index.html#safety">Безопасность полетов</a></li>
+                    <li><a href="index.html#space">Авиация и космос</a></li>
+                    <li><a href="index.html#innovation">Инновации в авиации</a></li>
+                    <li><a href="index.html#commercial">Коммерческая авиация</a></li>
+                    <li><a href="index.html#airlines">Авиакомпании мира</a></li>
+                    <li><a href="index.html#training">Обучение пилотов</a></li>
+                    <li><a href="index.html#history">История воздушных судов</a></li>
+                    <li><a href="index.html#technology">Авионика и технологии</a></li>
+                    <li><a href="index.html#regulations">Авиационные стандарты и регулирование</a></li>
+                    <li><a href="index.html#supersonic">Сверхзвуковые самолеты</a></li>
+                    <li><a href="index.html#cargo">Грузовая авиация</a></li>
+                    <li><a href="index.html#aviation-engineering">Инженерия авиации</a></li>
+                    <li><a href="index.html#environment">Экология авиации</a></li>
+                    <li><a href="index.html#aerospace">Аэрокосмическая индустрия</a></li>
+                    <li><a href="index.html#airshows">Авиационные шоу</a></li>
+                    <li><a href="feedback_form.html">Обратная связь</a></li>
+                </ul>
+            </nav>
+            
+            <main class="content">
+                <div class="form-container">
+                    <h1 class="form-title">Форма обратной связи</h1>
+                    <p>Пожалуйста, заполните форму ниже, чтобы отправить нам свой отзыв или вопрос о мире авиации.</p>
+                    
+                    <form id="feedbackForm" name="feedbackForm">
+                    </form>
+                </div>
+            </main>
+        </div>
+        
+        <footer class="footer">
+            Авиация — это небо без границ!
+        </footer>
+    </div>
+
+    <script>
+        var formData = [
+            { label: 'Ваше имя:', elemtype: 'text1line', name: 'fullname', width: 250, required: true, validation: { pattern: '^[А-Яа-яЁёA-Za-z\\s]{2,50}$', message: 'Имя должно содержать от 2 до 50 символов и только буквы' } },
+            { label: 'Email:', elemtype: 'email', name: 'email', width: 250, required: true, validation: { pattern: '^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$', message: 'Введите корректный email адрес' } },
+            { label: 'Тема:', elemtype: 'select', name: 'subject', options: [
+                { value: '', text: 'Выберите тему' },
+                { value: 'question', text: 'Вопрос' },
+                { value: 'suggestion', text: 'Предложение' },
+                { value: 'complaint', text: 'Жалоба' },
+                { value: 'praise', text: 'Благодарность' }
+            ], required: true, validation: { message: 'Пожалуйста, выберите тему' } },
+            { label: 'Сообщение:', elemtype: 'textarea', name: 'message', rows: 5, cols: 40, required: true, validation: { minLength: 10, message: 'Сообщение должно содержать минимум 10 символов' } },
+            { label: '', elemtype: 'button', name: 'submitBtn', value: 'Отправить' }
+        ];
+
+        function createForm(formData, formName) {
+            const form = document.getElementById(formName);
+            if (!form) return;
+            
+            formData.forEach(field => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'form-row';
+                
+                const label = document.createElement('label');
+                label.className = 'form-label';
+                label.htmlFor = field.name;
+                label.textContent = field.label;
+                
+                const fieldDiv = document.createElement('div');
+                fieldDiv.className = 'form-field';
+                
+                let element;
+                
+                switch (field.elemtype) {
+                    case 'text1line':
+                        element = document.createElement('input');
+                        element.type = 'text';
+                        element.id = field.name;
+                        element.name = field.name;
+                        if (field.width) element.style.width = field.width + 'px';
+                        if (field.required) element.required = true;
+                        break;
+                    
+                    case 'email':
+                        element = document.createElement('input');
+                        element.type = 'email';
+                        element.id = field.name;
+                        element.name = field.name;
+                        if (field.width) element.style.width = field.width + 'px';
+                        if (field.required) element.required = true;
+                        break;
+                    
+                    case 'textarea':
+                        element = document.createElement('textarea');
+                        element.id = field.name;
+                        element.name = field.name;
+                        if (field.rows) element.rows = field.rows;
+                        if (field.cols) element.cols = field.cols;
+                        if (field.required) element.required = true;
+                        break;
+                    
+                    case 'select':
+                        element = document.createElement('select');
+                        element.id = field.name;
+                        element.name = field.name;
+                        if (field.required) element.required = true;
+                        
+                        if (field.options && Array.isArray(field.options)) {
+                            field.options.forEach(option => {
+                                const optElement = document.createElement('option');
+                                optElement.value = option.value;
+                                optElement.textContent = option.text;
+                                element.appendChild(optElement);
+                            });
+                        }
+                        break;
+                    
+                    case 'button':
+                        element = document.createElement('input');
+                        element.type = 'button';
+                        element.id = field.name;
+                        element.name = field.name;
+                        element.value = field.value || 'Submit';
+                        
+                        element.addEventListener('click', function() {
+                            if (validateAllFields(formData, formName)) {
+                                alert('Форма успешно отправлена!');
+                            }
+                        });
+                        break;
+                    
+                    default:
+                        break;
+                }
+                
+                if (element) {
+                     if (['text1line', 'email', 'textarea', 'select'].includes(field.elemtype)) {
+        
+                         element.addEventListener('blur', function() {
+                        validateField(field, this);
+                    });
+
+                     element.addEventListener('input', function() {
+                      validateField(field, this);
+                });
+    }
+
+    fieldDiv.appendChild(element);
+}
+
+                
+                const errorDiv = document.createElement('div');
+                errorDiv.id = `error_${field.name}`;
+                errorDiv.className = 'error-message';
+                
+                rowDiv.appendChild(label);
+                rowDiv.appendChild(fieldDiv);
+                rowDiv.appendChild(errorDiv);
+                
+                form.appendChild(rowDiv);
+            });
+        }
+        
+        function validateField(fieldConfig, fieldElement) {
+            const errorElement = document.getElementById(`error_${fieldConfig.name}`);
+            if (!errorElement) return true;
+            
+            errorElement.textContent = '';
+            
+            if (fieldConfig.required && !fieldElement.value.trim()) {
+                errorElement.textContent = 'Это поле обязательно для заполнения';
+                return false;
+            }
+            
+            if (fieldElement.value.trim()) {
+                if (fieldConfig.validation && fieldConfig.validation.pattern) {
+                    const regexPattern = new RegExp(fieldConfig.validation.pattern);
+                    if (!regexPattern.test(fieldElement.value)) {
+                        errorElement.textContent = fieldConfig.validation.message || 'Неверный формат';
+                        return false;
+                    }
+                }
+                
+                if (fieldConfig.validation && fieldConfig.validation.minLength) {
+                    if (fieldElement.value.length < fieldConfig.validation.minLength) {
+                        errorElement.textContent = fieldConfig.validation.message || `Минимальная длина: ${fieldConfig.validation.minLength} символов`;
+                        return false;
+                    }
+                }
+            }
+            
+            if (fieldConfig.elemtype === 'select' && fieldConfig.required) {
+                if (!fieldElement.value) {
+                    errorElement.textContent = fieldConfig.validation.message || 'Пожалуйста, выберите вариант';
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        function validateAllFields(formData, formName) {
+            let isValid = true;
+            
+            formData.forEach(field => {
+                if (field.elemtype === 'button') return;
+                
+                const fieldElement = document.getElementById(field.name);
+                if (fieldElement && !validateField(field, fieldElement)) {
+                    isValid = false;
+                }
+            });
+            
+            return isValid;
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            createForm(formData, 'feedbackForm');
+        });
+    </script>
+</body>
+</html>
